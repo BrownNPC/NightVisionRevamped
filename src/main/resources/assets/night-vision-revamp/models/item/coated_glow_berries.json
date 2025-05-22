@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "night-vision-revamp:item/coated_glow_berries"
+  }
+}
