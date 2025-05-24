@@ -26,10 +26,10 @@ import kotlin.random.Random
 
 object NightVisionRevamp : ModInitializer {
     private val logger = LoggerFactory.getLogger("night-vision-revamp")
-
     override fun onInitialize() {
     logger.info("Registering NightVisionRevamp...")
     // Make coated glow berry item that is crafted with 1 glow ink sac and 1 glow berries
+    // crafting recipe is not defined in this file
     val id= Identifier.of("night-vision-revamp", "coated_glow_berries")
     val key = RegistryKey.of(RegistryKeys.ITEM, id);
     val settings = Item.Settings()
@@ -40,9 +40,9 @@ object NightVisionRevamp : ModInitializer {
             .build()
         )
     val COATED_GLOW_BERRY = Registry.register( // register custom item
-       Registries.ITEM,
-       key,
-       Item(settings)
+    Registries.ITEM,
+    key,
+    Item(settings)
     )
     // the custom item is a food
     ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register { group ->
@@ -68,7 +68,6 @@ object NightVisionRevamp : ModInitializer {
                     .build()
             )
             // gives the same nutrition as a regular glow berry
-            val food = builder.getOrDefault(DataComponentTypes.FOOD, FoodComponent.Builder().build())
             builder.add(DataComponentTypes.FOOD, 
                 FoodComponent.Builder()
                     .nutrition(2)
@@ -100,7 +99,7 @@ object NightVisionRevamp : ModInitializer {
                     .build()
             )
         }
-
+        // sea pickles give 5 seconds of night vision
         ctx.modify(Items.SEA_PICKLE) { builder ->
             builder.add(
                 DataComponentTypes.CONSUMABLE,
