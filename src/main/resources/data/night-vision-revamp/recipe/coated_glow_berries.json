@@ -4,10 +4,6 @@
         "minecraft:glow_ink_sac",
         "minecraft:glow_berries"
     ],
-    "components": [
-        {
-        
-    }
     "result": {
         "id": "night-vision-revamp:coated_glow_berries",
         "count": 1
