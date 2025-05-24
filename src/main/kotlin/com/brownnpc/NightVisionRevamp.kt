@@ -17,9 +17,11 @@ import net.minecraft.registry.RegistryKey
 import net.minecraft.registry.RegistryKeys
 import net.minecraft.util.Identifier
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents
 import net.minecraft.item.ItemGroups
 import org.slf4j.LoggerFactory
 import kotlin.random.Random
+
 
 
 object NightVisionRevamp : ModInitializer {
@@ -50,29 +52,39 @@ object NightVisionRevamp : ModInitializer {
     // it gives nausea for 7 seconds, makes you glow for 20, and gives you 2 mins of nightvision
     DefaultItemComponentEvents.MODIFY.register( { ctx ->
         ctx.modify(COATED_GLOW_BERRY) { builder ->
+
             builder.add(
                 DataComponentTypes.CONSUMABLE,
                 ConsumableComponent.builder()
                     .consumeEffect(
                         ApplyEffectsConsumeEffect(
                             listOf(
-                                StatusEffectInstance(StatusEffects.NAUSEA, 20 * 6), // 6 seconds (squid ink is gross)
-                                StatusEffectInstance(StatusEffects.GLOWING, 20 * 20), // 20 seconds (squid ink makes you glow)
-                                StatusEffectInstance(StatusEffects.NIGHT_VISION, 20 * 2*60) // 2 mins
+                                StatusEffectInstance(StatusEffects.NAUSEA, 20 * 5), // 6 seconds (squid ink is gross)
+                                StatusEffectInstance(StatusEffects.GLOWING, 20 * 8), // 8 seconds (squid ink makes you glow)
+                                StatusEffectInstance(StatusEffects.NIGHT_VISION, 20 * 100) // 100 seconds
                             )
                         )
                     )
                     .build()
             )
+            // gives the same nutrition as a regular glow berry
+            val food = builder.getOrDefault(DataComponentTypes.FOOD, FoodComponent.Builder().build())
+            builder.add(DataComponentTypes.FOOD, 
+                FoodComponent.Builder()
+                    .nutrition(2)
+                    .saturationModifier(0.6f)
+                    .alwaysEdible()
+                    .build()
+            )
         }
-        // Modify vanilla glow berries to give 20 seconds of night vision
+        // Modify vanilla glow berries to give 15 seconds of night vision
         ctx.modify(Items.GLOW_BERRIES) { builder ->
             builder.add(
                 DataComponentTypes.CONSUMABLE,
                 ConsumableComponent.builder()
                     .consumeEffect(
                         ApplyEffectsConsumeEffect(
-                            StatusEffectInstance(StatusEffects.NIGHT_VISION, 20 * 20)
+                            StatusEffectInstance(StatusEffects.NIGHT_VISION, 20 * 15)
                         )
                     )
                     .build()
@@ -88,9 +100,29 @@ object NightVisionRevamp : ModInitializer {
                     .build()
             )
         }
+
+        ctx.modify(Items.SEA_PICKLE) { builder ->
+            builder.add(
+                DataComponentTypes.CONSUMABLE,
+                ConsumableComponent.builder()
+                    .consumeEffect(
+                        ApplyEffectsConsumeEffect(
+                            listOf(
+                                StatusEffectInstance(StatusEffects.NIGHT_VISION, 20 * 5), // 5 seconds
+                            )
+                        )
+                    )
+                    .build()
+            )
+            builder.add(DataComponentTypes.FOOD, 
+                FoodComponent.Builder()
+                    .nutrition(1)
+                    .alwaysEdible()
+                    .build()
+            )
+        }
+
     })
-
-
     }
 }
 
